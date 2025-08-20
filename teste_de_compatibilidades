@@ -1,0 +1,122 @@
+
+def verificar_compatibilidade(fertilizante1, fertilizante2):
+    """
+    Verifica a compatibilidade entre dois fertilizantes.
+
+    Args:
+        fertilizante1 (str): Nome do primeiro fertilizante.
+        fertilizante2 (str): Nome do segundo fertilizante.
+
+    Returns:
+        str: "C" se compatível, "L" se compatibilidade limitada, "I" se incompatível.
+             Retorna None se algum dos fertilizantes não for encontrado no dicionário.
+    """
+    if fertilizante1 in compatibilidade and fertilizante2 in compatibilidade:
+        return compatibilidade[fertilizante1][fertilizante2]
+    else:
+        return None
+
+
+
+def obter_recomendacao(fertilizante1, fertilizante2):
+    """
+    Obtém a recomendação de mistura entre dois fertilizantes.
+
+    Args:
+        fertilizante1 (str): Nome do primeiro fertilizante.
+        fertilizante2 (str): Nome do segundo fertilizante.
+
+    Returns:
+        str: Uma string com a recomendação de mistura.
+    """
+    status = verificar_compatibilidade(fertilizante1, fertilizante2)
+    if status == "C":
+        return "Compatível: Podem ser misturados."
+    elif status == "L":
+        return "Compatibilidade Limitada: Devem ser misturados pouco antes da aplicação."
+    elif status == "I":
+        return "Incompatível: Não podem ser misturados."
+    elif status is None:
+        return "Erro: Um ou ambos os fertilizantes não foram encontrados."
+    else:
+        return "Erro: Status de compatibilidade desconhecido."
+
+def listar_fertilizantes_disponiveis():
+    """
+    Lista os fertilizantes disponíveis no dicionário de compatibilidade.
+    """
+    print("Fertilizantes disponíveis:")
+    for i, fertilizante in enumerate(compatibilidade.keys(), start=1):
+        print(f"{i}. {fertilizante}")
+    print() # Adiciona uma linha em branco para melhorar a legibilidade
+
+def obter_fertilizante_por_numero(numero):
+    """
+    Obtém o nome do fertilizante correspondente ao número fornecido.
+
+    Args:
+        numero (int): O número do fertilizante.
+
+    Returns:
+        str: O nome do fertilizante, ou None se o número for inválido.
+    """
+    if 1 <= numero <= len(compatibilidade):
+        return list(compatibilidade.keys())[numero - 1]
+    else:
+        return None
+
+def main():
+    """
+    Função principal para interagir com o usuário e verificar a compatibilidade de fertilizantes.
+    """
+    while True:
+        print("\nOpções:")
+        print("1. Verificar compatibilidade de fertilizantes")
+        print("2. Listar fertilizantes disponíveis")
+        print("3. Sair")
+        opcao = input("Digite o número da opção desejada: ")
+
+        if opcao == "1":
+            listar_fertilizantes_disponiveis() # Mostra a lista numerada de fertilizantes
+            escolha1 = input("Digite o número ou o nome do primeiro fertilizante: ")
+            escolha2 = input("Digite o número ou o nome do segundo fertilizante: ")
+
+            fertilizante1 = None
+            fertilizante2 = None
+
+            # Tenta converter a entrada para um número
+            if escolha1.isdigit():
+                fertilizante1 = obter_fertilizante_por_numero(int(escolha1))
+            else:
+                # Remove espaços extras e converte para título para comparar
+                escolha1_formatado = escolha1.strip().title()
+                if escolha1_formatado in compatibilidade:
+                    fertilizante1 = escolha1_formatado
+
+            if escolha2.isdigit():
+                fertilizante2 = obter_fertilizante_por_numero(int(escolha2))
+            else:
+                # Remove espaços extras e converte para título para comparar
+                escolha2_formatado = escolha2.strip().title()
+                if escolha2_formatado in compatibilidade:
+                    fertilizante2 = escolha2_formatado
+
+            # Verifica se os fertilizantes foram encontrados
+            if fertilizante1 and fertilizante2:
+                recomendacao = obter_recomendacao(fertilizante1, fertilizante2)
+                print(recomendacao)
+            else:
+                print("Um ou ambos os fertilizantes não foram encontrados. Verifique a grafia ou os números e tente novamente.")
+
+        elif opcao == "2":
+            listar_fertilizantes_disponiveis()
+        elif opcao == "3":
+            break
+        else:
+            print("Opção inválida. Por favor, digite 1, 2 ou 3.")
+
+
+
+if __name__ == "__main__":
+    main()
+
